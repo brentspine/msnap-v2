@@ -51,7 +51,7 @@ Each Microsoft Account has:
     - Name -> The name of the account
     - Capes -> List of capes that the account has
     - Creation Date -> When the Minecraft account was created
-    - Name History -> List of name changes that the account had
+    - (Not currently) Name History -> List of name changes that the account had
     - Servers -> List of servers that the account has data on. Each Server has its own class.
         - Each entry only stores data that is connected to the specific account and server. Meaning Server Name and Server IP are stored somewhere else.
             - UnbanTimestamp: Timestamp when a ban is lifted (0 or null means not banned)
@@ -71,18 +71,19 @@ Each Microsoft Account has:
         - Type: Mastercard, Visa, etc.
         - Display: What is shown when the card is displayed, for example "ahmed alaa eldin elsayed ••2204"
         - Address: For example "suez, suez, 12345, EG"
-    - Orders: https://account.microsoft.com/billing/orders?lang=en-GB&period=SevenYears&type=All&refd=account.microsoft.com
-        - Address: can be null. Otherwise just a string
-        - DisplayName: Just scraped from the order page (plain string)
-        - Price: Price paid for the order
-        - PriceCurrency: Currency of the price
-        - OrderDate: Date of the order, just scraped
-        - OrderNumber: Order number, just scraped
     - OAuthApps: Don't implement yet
     - MSPoints: Amount of MS Points the account has
     - MSWalletBalance: Amount of money in the MS Wallet
     - MSWalletBalanceCurrency: Currency of the MS Wallet balance
-- OriginalAdditionalInfo:
+- OriginalAdditionalInfo
+- Orders: https://account.microsoft.com/billing/orders?lang=en-GB&period=SevenYears&type=All&refd=account.microsoft.com
+    - Address: can be null. Otherwise just a string
+    - DisplayName: Just scraped from the order page (plain string)
+    - Price: Price paid for the order
+    - PriceCurrency: Currency of the price
+    - OrderDate: Date of the order, just scraped
+    - OrderNumber: Order number, just scraped
+    - SystemTriggered: Whether the order was triggered by our system
 - Games: We don't need to store more info, just the fact that we own it
 - Note: A freetext field that can store any additional information
 
@@ -113,7 +114,6 @@ Each Microsoft Account has:
     - Associated with a cape. One cape can have multiple codes
     - code: The redeemable code for the cape
     - source: From where the cape was obtained
-    - imported_at: When the code was imported into the system
     - redeemed_at: When the code was redeemed. Null if not redeemed yet
     - redeemed_by: Key to a minecraft account
 
@@ -158,6 +158,18 @@ We have:
 An account valuation is then performed by taking the latest PUBLISHED price list and summing up all values for the account based on that price list.
 
 We then have a central evaluation service with potential subclasses that delegate the evaluation of specific entities to specific services, for example CapeValuationService, CurrencyValuationService, etc. This way we can easily manage the valuation of each entity and change it on the fly via the price list system.
+Instead of recalculating the value of each account every time we need it, we need to cache the value and only recalculate it when something changes.
+
+### Bounty System
+We want to be able to set bounties for specific UUIDs or names
+Bounty Class:
+ - UUID (nullable)
+ - Name (nullable)
+ - Value: The value of the bounty
+ - ValueMode: Possible Modes: 
+   - Overwrite: New value, no matter what
+   - Add: Add this value to the existing value
+ - Reason: A note that describes the reason for the bounty
 
 ### Money System (Currency Conversion)
 The standard currency is EUR because its stable but we want to be able to change that on the fly. Therefore we implement a currency conversion system. We have a Money record, that stores the amount and a currency identifier.
@@ -210,7 +222,10 @@ A discord bot instead of a more sophisticated web interface for now, because it 
 ### Jobs/Automation
 We need automated jobs for certain tasks, for example:
  - Changing security details
+ - Getting server data
+So 2 types: Selenium based and Mineflayer based
 
 ### 2FA and Mail Service
 We need to automatically handle mail verification and potentially 2FA apps. 
 
+Important is to remember to lazy fetch data that is not always needed. Otherwise the monolith MicrosoftAccount entity will become way too big and slow to handle. For example Outlook Mails should only be fetched when needed, not always when the account is loaded.

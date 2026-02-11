@@ -8,7 +8,7 @@ import java.time.Instant;
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class AccountActivity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Instant doneAt;
     private boolean own;

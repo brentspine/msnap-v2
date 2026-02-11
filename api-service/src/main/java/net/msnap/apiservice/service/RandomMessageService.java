@@ -13,7 +13,9 @@ public class RandomMessageService {
             "Awaiting your commands",
             "Ready to serve",
             "All systems operational",
-            "At your service"
+            "At your service",
+            "Ready to snap",
+            "Helloooo :wave:"
     );
 
     private final Random random = new Random();

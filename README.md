@@ -222,6 +222,7 @@ A discord bot instead of a more sophisticated web interface for now, because it 
 ### Jobs/Automation
 We need automated jobs for certain tasks, for example:
  - Changing security details
+ - Redeem Cape Code
  - Getting server data
 So 2 types: Selenium based and Mineflayer based
 

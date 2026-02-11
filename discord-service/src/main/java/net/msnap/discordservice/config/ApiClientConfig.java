@@ -1,5 +1,6 @@
 package net.msnap.discordservice.config;
 
+import net.msnap.apiclient.api.CapeControllerApi;
 import net.msnap.apiclient.api.PingControllerApi;
 import net.msnap.apiclient.invoker.ApiClient;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,6 +38,17 @@ public class ApiClientConfig {
     @Bean
     public PingControllerApi pingControllerApi(ApiClient apiClient) {
         return new PingControllerApi(apiClient);
+    }
+
+    /**
+     * Creates the CapeControllerApi bean using the configured ApiClient.
+     *
+     * @param apiClient the ApiClient to use
+     * @return the CapeControllerApi instance
+     */
+    @Bean
+    public CapeControllerApi capeControllerApi(ApiClient apiClient) {
+        return new CapeControllerApi(apiClient);
     }
 }
 

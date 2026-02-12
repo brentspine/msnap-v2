@@ -13,6 +13,8 @@ public record ListCapesDTO(
         String description,
         @Schema(description = "Full URL to the cape image")
         String image,
+        @Schema(description = "Discord custom emoji mention text associated with this cape (raw), e.g. <:minecraftexperience:1471358363764916337> or <a:party:1471358363764916337>", example = "<:minecraftexperience:1471358363764916337>")
+        String discordEmoji,
         @Schema(description = "Last update time of the cape")
         Instant updatedAt,
         @Schema(description = "Whether the cape allows codes to be redeemed for it. See CapeCodes section.")

@@ -20,6 +20,10 @@ public class Cape {
     private String description;
     @Column(name = "image", length = 1024)
     private String image;
+
+    @Column(name = "discord_emoji", length = 255)
+    private String discordEmoji;
+
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
     @Column(name = "allows_codes", nullable = false)
@@ -74,6 +78,14 @@ public class Cape {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public String getDiscordEmoji() {
+        return discordEmoji;
+    }
+
+    public void setDiscordEmoji(String discordEmoji) {
+        this.discordEmoji = discordEmoji;
     }
 
     public Instant getUpdatedAt() {
